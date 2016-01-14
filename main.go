@@ -31,7 +31,7 @@ I am pretty sure you do. Now use this cd comand and go to the /tmp directory
 
 	challenge.AddLevel(levels.Level{
 		Name:    `l01`,
-		TestCmd: `[[ $(pwd) == "/tmp" ]]`,
+		TestCmd: `test $(pwd) = "/tmp"`,
 		Text: `
 I see you made it, awesome !
 
@@ -45,7 +45,7 @@ will end up in your home directory, wherever that might be.
 
 	challenge.AddLevel(levels.Level{
 		Name:    `l02`,
-		TestCmd: `[[ $(pwd) == "$HOME" ]]`,
+		TestCmd: `test $(pwd) = "$HOME"`,
 		Text: `
 I see you made it again, awesome! That's all for now, so lay back and enjoy your
 shell!

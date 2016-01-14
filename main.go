@@ -26,8 +26,6 @@ I would type
 Got it?
 
 I am pretty sure you do. Now use this cd comand and go to the /tmp directory
-
-
 `,
 	})
 
@@ -42,7 +40,6 @@ when you log into your account or open a new shell. It is pretty tough to
 remember its particular name so the old UNIX hackers have simplified it for
 you: if you execute the "cd" command without any additional parameters, you
 will end up in your home directory, wherever that might be.
-
 `,
 	})
 
@@ -50,7 +47,7 @@ will end up in your home directory, wherever that might be.
 		Name:    `l02`,
 		TestCmd: `[[ $(pwd) == "$HOME" ]]`,
 		Text: `
-I see you made it, awesome! That's all for now, so lay back and enjoy your
+I see you made it again, awesome! That's all for now, so lay back and enjoy your
 shell!
 `,
 	})

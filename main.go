@@ -14,7 +14,7 @@ func main() {
 Hi there.
 
 I understand that a command line talking to you might not make sense right now
-but bear with me, things will get better.
+but bear with me, things *will* get better.
 
 First of all, you need to learn how to move from one directory to another. This
 can be done using the "cd" commad which is a very short abbreviation for

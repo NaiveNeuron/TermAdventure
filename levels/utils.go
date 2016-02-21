@@ -1,7 +1,6 @@
 package levels
 
 import (
-	"github.com/mgutz/ansi"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -32,10 +31,24 @@ func PrintText(text string) {
 }
 
 func MarkdownToTerminal(text string) string {
-	bold_regex, _ := regexp.Compile(`\*\*[^\*]+\*\*`)
+	bold_regex, _ := regexp.Compile(`\*\*([^\*]+)\*\*`)
+	italic_regex, _ := regexp.Compile(`\*([^\*]+)\*`)
+	header_regex, _ := regexp.Compile(`^\s*\#+\s*(.+)`)
 
-	boldify := ansi.ColorFunc("+b")
+	bold := "\033[1m"
+	inverse := "\033[7m"
+	underline_bold := "\033[1;4m"
+	reset := "\033[0m"
 
-	text = bold_regex.ReplaceAllStringFunc(text, boldify)
+	text = regexReplaceFunc(bold_regex, text, bold, reset)
+	text = regexReplaceFunc(italic_regex, text, inverse, reset)
+	text = regexReplaceFunc(header_regex, text, underline_bold, reset)
+
 	return text
+}
+
+func regexReplaceFunc(r *regexp.Regexp, text string, start string, end string) string {
+	return r.ReplaceAllStringFunc(text, func(s string) string {
+		return start + r.FindStringSubmatch(s)[1] + end
+	})
 }

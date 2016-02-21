@@ -18,7 +18,7 @@ but bear with me, things will get better.
 
 First of all, you need to learn how to move from one directory to another. This
 can be done using the "cd" commad which is a very short abbreviation for
-'change directory'.  For instance if I wanted to go to the /usr directory
+**'change directory'**.  For instance if I wanted to go to the /usr directory
 I would type
 
 	$ cd /usr

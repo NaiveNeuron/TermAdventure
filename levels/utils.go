@@ -1,7 +1,9 @@
 package levels
 
 import (
+	"github.com/mgutz/ansi"
 	"os/exec"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -27,4 +29,13 @@ func PrintText(text string) {
 	for _, line := range lines {
 		print_line(line)
 	}
+}
+
+func MarkdownToTerminal(text string) string {
+	bold_regex, _ := regexp.Compile(`\*\*[^\*]+\*\*`)
+
+	boldify := ansi.ColorFunc("+b")
+
+	text = bold_regex.ReplaceAllStringFunc(text, boldify)
+	return text
 }

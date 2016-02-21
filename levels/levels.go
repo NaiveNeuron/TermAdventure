@@ -30,7 +30,8 @@ type Level struct {
 }
 
 func (level *Level) Print() {
-	PrintText(level.Text)
+	terminalized_text := MarkdownToTerminal(level.Text)
+	PrintText(terminalized_text)
 }
 
 type Challenge struct {

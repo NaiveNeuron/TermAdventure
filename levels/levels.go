@@ -6,8 +6,13 @@ import (
 	"flag"
 	"fmt"
 	"github.com/rakyll/globalconf"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
 	"os/user"
+	"path/filepath"
+	"regexp"
+	"strings"
 )
 
 type flagValue struct {
@@ -24,11 +29,11 @@ func (f *flagValue) Set(value string) error {
 }
 
 type Level struct {
-	Name        string
-	PreTextCmd  string
-	Text        string
-	PostTextCmd string
-	TestCmd     string
+	Name         string
+	PreLevelCmd  string `yaml:"precmd"`
+	PostLevelCmd string `yaml:"postcmd"`
+	Text         string
+	TestCmd      string `yaml:"test"`
 }
 
 func (level *Level) Print() {
@@ -73,10 +78,12 @@ func (c *Challenge) PrintCurrentLevel() {
 func (c *Challenge) IncreaseLevel() {
 	index := c.IDToIndex(*c.CurrentLevel)
 	index += 1
-	fint := &flagValue{str: IndexToID(index, c.Name)}
+	id := IndexToID(index, c.Name)
+	fint := &flagValue{str: id}
 	f := &flag.Flag{Name: "level", Value: fint}
 	c.conf.Set("", f)
-	c.conf.ParseAll()
+
+	*c.CurrentLevel = id
 }
 
 func (c *Challenge) LoadCfg() {
@@ -109,4 +116,56 @@ func GetMD5Hash(text string) string {
 	hasher := md5.New()
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))
+}
+
+func (c *Challenge) LoadFromString(text string) {
+	level_regex, _ := regexp.Compile("(?s)(.*?)\n\n------------+\n")
+	for _, part := range level_regex.FindAllStringSubmatch(text, -1) {
+		c.AddLevel(buildLevel(part[1]))
+	}
+
+}
+
+func (c *Challenge) LoadFromFile(path string) {
+	text, err := ioutil.ReadFile(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.LoadFromString(string(text))
+}
+
+func BasenameFromPath(path string) string {
+	base := filepath.Base(path)
+	ext := filepath.Ext(path)
+	return base[:len(base)-len(ext)]
+}
+
+func buildLevel(text string) Level {
+	parts := strings.Split(text, "\n\n")
+	metadata := parts[0]
+	clean_text := strings.Join(parts[1:len(parts)], "\n\n")
+
+	level := Level{}
+
+	err := yaml.Unmarshal([]byte(metadata), &level)
+	if err != nil {
+		log.Fatal(err)
+	}
+	level.Text = clean_text
+	return level
+}
+
+func (c *Challenge) Print() {
+	fmt.Printf("We have %d levels.\n", len(c.Levels))
+	for i := 0; i < len(c.Levels); i++ {
+		c.Levels[i].PrintStructured()
+	}
+}
+
+func (l *Level) PrintStructured() {
+	d, err := yaml.Marshal(&l)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("\n%s\n", string(d))
 }

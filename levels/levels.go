@@ -36,9 +36,9 @@ type Level struct {
 	TestCmd      string `yaml:"test"`
 }
 
-func (level *Level) Print() {
+func (level *Level) Print(pretty_print_flag bool) {
 	terminalized_text := MarkdownToTerminal(level.Text)
-	PrintText(terminalized_text)
+	PrintText(terminalized_text, pretty_print_flag)
 }
 
 type Challenge struct {
@@ -71,8 +71,8 @@ func (c *Challenge) CheckCurrentLevel() bool {
 	return CmdOK(c.Levels[level].TestCmd)
 }
 
-func (c *Challenge) PrintCurrentLevel() {
-	c.Levels[c.IDToIndex(*c.CurrentLevel)].Print()
+func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool) {
+	c.Levels[c.IDToIndex(*c.CurrentLevel)].Print(pretty_print_flag)
 }
 
 func (c *Challenge) IncreaseLevel() {

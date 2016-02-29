@@ -9,6 +9,8 @@ import (
 
 func main() {
 	print_flag := flag.Bool("print", false, "print loaded levels and exit")
+	pretty_print_flag := flag.Bool("no-pretty-print", false,
+		"disable option to skip pretty printing")
 	flag.Parse()
 
 	if len(flag.Args()) < 1 {
@@ -31,7 +33,7 @@ func main() {
 	challenge.LoadCfg()
 
 	if challenge.CheckCurrentLevel() {
-		challenge.PrintCurrentLevel()
+		challenge.PrintCurrentLevel(*pretty_print_flag)
 		challenge.IncreaseLevel()
 	}
 

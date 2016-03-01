@@ -1,0 +1,16 @@
+export PS1="[\u@\H:\w]$ "
+
+# history
+export HISTFILESIZE=500
+export HISTSIZE=500
+export HISTFILE=$HOME/.gtahistory
+export HISTCONTROL=ignoredups
+
+# aliases
+alias ls='ls --color=auto'
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+alias l.='ls -d .* --color=auto'
+
+alias grep='grep --color=auto'

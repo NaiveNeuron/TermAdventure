@@ -1,5 +1,6 @@
 #!/bin/bash
+CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CHALLENGE_FILE="$CURRENT_DIR/sample_challenge.gta"
+GTA_BIN="$CURRENT_DIR/go-term-adventure"
 
-PROMPT_COMMAND="$(pwd)/go-term-adventure $(pwd)/sample_challenge.gta" HISTFILE=$HOME/.gtahistory bash
-rm -rf $HOME/.gtadvhistory
-rm -rf $HOME/.config/sample_challenge
+source ./challenger.sh

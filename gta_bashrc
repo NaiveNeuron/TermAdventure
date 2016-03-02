@@ -1,3 +1,9 @@
+# SANE DEFAULTS
+
+# save multi-line commands as one command
+shopt -s cmdhist
+
+# set PS1 to a sane default
 export PS1="[\u@\H:\w]$ "
 
 # history

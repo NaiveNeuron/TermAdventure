@@ -77,7 +77,15 @@ func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool) {
 
 func (c *Challenge) IncreaseLevel() {
 	index := c.IDToIndex(*c.CurrentLevel)
+
+	last_index := index - 1
+	if last_index >= 0 {
+		CmdOK(c.Levels[last_index].PostLevelCmd)
+	}
+	CmdOK(c.Levels[index].PreLevelCmd)
+
 	index += 1
+
 	id := IndexToID(index, c.Name)
 	fint := &flagValue{str: id}
 	f := &flag.Flag{Name: "level", Value: fint}

@@ -22,6 +22,8 @@ I am pretty sure you do. Now use this cd command and go to the /tmp directory
 
 name: l01
 test: test $(pwd) = "/tmp"
+precmd: echo "Hi there!" > /tmp/gtatest
+postcmd: rm /tmp/gtatest
 
 I see you made it, awesome !
 
@@ -30,6 +32,8 @@ when you log into your account or open a new shell. It is pretty tough to
 remember its particular name so the old UNIX hackers have simplified it for
 you: if you execute the "cd" command without any additional parameters, you
 will end up in your home directory, wherever that might be.
+
+(Note: you might want to check /tmp/gtatest)
 
 --------------------
 

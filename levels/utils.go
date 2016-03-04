@@ -12,6 +12,9 @@ import (
 )
 
 func CmdOK(cmd string) bool {
+	if cmd == "" {
+		return true
+	}
 	_, err := exec.Command("sh", "-c", cmd).Output()
 	return err == nil
 }

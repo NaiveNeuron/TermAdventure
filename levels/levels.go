@@ -68,7 +68,17 @@ func (c *Challenge) AddLevel(level Level) {
 
 func (c *Challenge) CheckCurrentLevel() bool {
 	level := c.IDToIndex(*c.CurrentLevel)
-	return CmdOK(c.Levels[level].TestCmd)
+	passed, next_level := CmdOK(c.Levels[level].TestCmd)
+	if next_level == "" {
+		return passed
+	} else {
+		index := c.LevelNameToIndex(next_level)
+		if index == -1 {
+			return false
+		}
+		*c.CurrentLevel = IndexToID(index, c.Name)
+		return true
+	}
 }
 
 func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool) {
@@ -101,6 +111,15 @@ func (c *Challenge) LoadCfg() {
 func (c *Challenge) PrintIdentifier() {
 	index := c.IDToIndex(*c.CurrentLevel)
 	fmt.Printf("[%s %s]", c.Name, c.Levels[index].Name)
+}
+
+func (c *Challenge) LevelNameToIndex(name string) int {
+	for i := 0; i < len(c.Levels); i++ {
+		if name == c.Levels[i].Name {
+			return i
+		}
+	}
+	return -1
 }
 
 func (c *Challenge) IDToIndex(id string) int {

@@ -1,3 +1,4 @@
+name: l00
 test: true
 
 # First alternative bash excercise
@@ -43,10 +44,19 @@ test: test $(pwd) = "$HOME"
 I see you made it again, awesome! That's all for now, so lay back and enjoy your
 shell!
 
+If you want to play this game once again create (an empty) file called
+'gta_once_again' in your $HOME directory.
+
 --------------------
 
 name: l03
-test: false
+test: |
+  if test -e $HOME/gta_once_again; then
+        rm -f $HOME/gta_once_again
+        echo -n "l00"
+  else
+        false
+  fi
 
 --------------------
 

@@ -11,12 +11,12 @@ import (
 	"time"
 )
 
-func CmdOK(cmd string) bool {
+func CmdOK(cmd string) (bool, string) {
 	if cmd == "" {
-		return true
+		return true, ""
 	}
-	_, err := exec.Command("sh", "-c", cmd).Output()
-	return err == nil
+	output, err := exec.Command("sh", "-c", cmd).Output()
+	return err == nil, string(output)
 }
 
 var key_pressed = false

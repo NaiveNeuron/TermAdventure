@@ -25,7 +25,7 @@ func print_line(text string, keypress chan []byte, echo_state bool) {
 	var counter = 0
 	var b []byte = make([]byte, 1)
 	for _, char := range text {
-		print(string(char))
+		fmt.Printf("%s", string(char))
 		if echo_state == false {
 			counter++
 			go func() { os.Stdin.Read(b); keypress <- b }()
@@ -46,7 +46,7 @@ func print_line(text string, keypress chan []byte, echo_state bool) {
 			time.Sleep(500 * time.Millisecond)
 		}
 	}
-	print("\n")
+	fmt.Println()
 }
 
 func PrintText(text string, pretty_print bool) {
@@ -74,6 +74,10 @@ func PrintText(text string, pretty_print bool) {
 	}
 
 	keypress := make(chan []byte, 1)
+	PrettyPrintText(text, keypress, echo_state)
+}
+
+func PrettyPrintText(text string, keypress chan []byte, echo_state bool) {
 	lines := strings.Split(text, "\n")
 	var counter = 0
 	for _, line := range lines {

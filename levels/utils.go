@@ -78,6 +78,9 @@ func PrintText(text string, pretty_print bool) {
 	var counter = 0
 	for _, line := range lines {
 		counter += len(line) + 1
+		if counter > len(text) {
+			counter = len(text)
+		}
 		print_line(line, keypress, echo_state)
 		if key_pressed {
 			fmt.Println(text[counter:len(text)])

@@ -9,7 +9,7 @@ fi
 CHALLENGE_NAME="$(basename $CHALLENGE_FILE | sed 's/\..*$//')"
 
 PROMPT_COMMAND="history -a; $GTA_BIN $CHALLENGE_FILE"\
-        bash --rcfile $CURRENT_DIR/gta_bashrc
+        bash --rcfile $CURRENT_DIR/gta_bashrc | tee $HOME/.gtaoutput
 
 rm -rf $HOME/.gtahistory
 rm -rf $HOME/.config/$CHALLENGE_NAME

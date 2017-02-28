@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/rakyll/globalconf"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
 	"log"
 	"os/user"
 	"path/filepath"
@@ -151,14 +150,6 @@ func (c *Challenge) LoadFromString(text string) {
 		c.AddLevel(buildLevel(part[1]))
 	}
 
-}
-
-func (c *Challenge) LoadFromFile(path string) {
-	text, err := ioutil.ReadFile(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-	c.LoadFromString(string(text))
 }
 
 func BasenameFromPath(path string) string {

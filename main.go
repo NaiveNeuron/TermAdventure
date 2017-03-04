@@ -9,8 +9,10 @@ import (
 	"os"
 )
 
+var encryption_key string
+
 func main() {
-	key := []byte("example key 1234")
+	key := []byte(encryption_key)
 
 	print_flag := flag.Bool("print", false, "print loaded levels and exit")
 	pretty_print_flag := flag.Bool("no-pretty-print", false,

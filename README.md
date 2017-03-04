@@ -5,7 +5,7 @@ A go library for creating good old text adventures in and for the *nix terminals
 In order to run the example runner (`sample_challenge.sh`) you need to clone
 this repository, install the Go language binary and run
 
-        go build
+        go build -ldflags "-X main.encryption_key=example_key_1234"
 
 in this repository.
 

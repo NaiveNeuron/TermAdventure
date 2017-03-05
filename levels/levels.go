@@ -8,10 +8,12 @@ import (
 	"github.com/rakyll/globalconf"
 	"gopkg.in/yaml.v2"
 	"log"
+	"math/rand"
 	"os/user"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 )
 
 type flagValue struct {
@@ -32,7 +34,8 @@ type Level struct {
 	PreLevelCmd  string `yaml:"precmd"`
 	PostLevelCmd string `yaml:"postcmd"`
 	Text         string
-	TestCmd      string `yaml:"test"`
+	TestCmd      string   `yaml:"test"`
+	NextLevels   []string `yaml:"next"`
 }
 
 func (level *Level) Print(pretty_print_flag bool) {
@@ -41,10 +44,11 @@ func (level *Level) Print(pretty_print_flag bool) {
 }
 
 type Challenge struct {
-	Name         string
-	Levels       []Level
-	conf         *globalconf.GlobalConf
-	CurrentLevel *string
+	Name             string
+	Levels           []Level
+	conf             *globalconf.GlobalConf
+	CurrentLevel     *string
+	LastLevelPrinted *string
 }
 
 func NewChallenge(name string) Challenge {
@@ -54,11 +58,16 @@ func NewChallenge(name string) Challenge {
 	}
 
 	c := Challenge{
-		Name:         name,
-		conf:         cfg,
-		CurrentLevel: flag.String("level", IndexToID(0, name), "Current Level"),
+		Name:             name,
+		conf:             cfg,
+		CurrentLevel:     flag.String("level", LevelToID("", name), "Current Level"),
+		LastLevelPrinted: flag.String("last_level_printed", "no", "Last Level Printed"),
 	}
 	return c
+}
+
+func (c *Challenge) SetCurrentLevel(level string) {
+	*c.CurrentLevel = LevelToID(level, c.Name)
 }
 
 func (c *Challenge) AddLevel(level Level) {
@@ -66,8 +75,8 @@ func (c *Challenge) AddLevel(level Level) {
 }
 
 func (c *Challenge) CheckCurrentLevel() bool {
-	level := c.IDToIndex(*c.CurrentLevel)
-	passed, next_level := CmdOK(c.Levels[level].TestCmd)
+	level, index := c.IDToLevel(*c.CurrentLevel)
+	passed, next_level := CmdOK(c.Levels[index].TestCmd)
 	if next_level == "" {
 		return passed
 	} else {
@@ -75,32 +84,40 @@ func (c *Challenge) CheckCurrentLevel() bool {
 		if index == -1 {
 			return false
 		}
-		*c.CurrentLevel = IndexToID(index, c.Name)
+		*c.CurrentLevel = LevelToID(level, c.Name)
 		return true
 	}
 }
 
 func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool) {
-	c.Levels[c.IDToIndex(*c.CurrentLevel)].Print(pretty_print_flag)
+	_, index := c.IDToLevel(*c.CurrentLevel)
+	c.Levels[index].Print(pretty_print_flag)
 }
 
-func (c *Challenge) IncreaseLevel() {
-	index := c.IDToIndex(*c.CurrentLevel)
+func (c *Challenge) GoToNextLevel() {
+	level, index := c.IDToLevel(*c.CurrentLevel)
 
-	last_index := index - 1
-	if last_index >= 0 {
-		CmdOK(c.Levels[last_index].PostLevelCmd)
-	}
+	CmdOK(c.Levels[index].PostLevelCmd)
+
+	rand.Seed(time.Now().UTC().UnixNano())
+	i := rand.Intn(len(c.Levels[index].NextLevels))
+
+	level = c.Levels[index].NextLevels[i]
+	index = c.LevelNameToIndex(level)
 	CmdOK(c.Levels[index].PreLevelCmd)
 
-	index += 1
-
-	id := IndexToID(index, c.Name)
-	fint := &flagValue{str: id}
-	f := &flag.Flag{Name: "level", Value: fint}
-	c.conf.Set("", f)
-
+	id := LevelToID(level, c.Name)
+	c.SetConfigVal("level", id)
 	*c.CurrentLevel = id
+
+	c.SetConfigVal("last_level_printed", "no")
+	*c.LastLevelPrinted = "no"
+}
+
+func (c *Challenge) SetConfigVal(name string, value string) {
+	fint := &flagValue{str: value}
+	f := &flag.Flag{Name: name, Value: fint}
+	c.conf.Set("", f)
 }
 
 func (c *Challenge) LoadCfg() {
@@ -108,8 +125,8 @@ func (c *Challenge) LoadCfg() {
 }
 
 func (c *Challenge) PrintIdentifier() {
-	index := c.IDToIndex(*c.CurrentLevel)
-	fmt.Printf("[%s %s]", c.Name, c.Levels[index].Name)
+	level, _ := c.IDToLevel(*c.CurrentLevel)
+	fmt.Printf("[%s %s]", c.Name, level)
 }
 
 func (c *Challenge) LevelNameToIndex(name string) int {
@@ -121,21 +138,21 @@ func (c *Challenge) LevelNameToIndex(name string) int {
 	return -1
 }
 
-func (c *Challenge) IDToIndex(id string) int {
+func (c *Challenge) IDToLevel(id string) (string, int) {
 	for i := 0; i < len(c.Levels); i++ {
-		if id == IndexToID(i, c.Name) {
-			return i
+		if id == LevelToID(c.Levels[i].Name, c.Name) {
+			return c.Levels[i].Name, i
 		}
 	}
-	return -1
+	return "", -1
 }
 
-func IndexToID(index int, challenge_name string) string {
+func LevelToID(level string, challenge_name string) string {
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatal(err)
 	}
-	return GetMD5Hash(fmt.Sprintf("i%sj%dk%sl", challenge_name, index, usr.HomeDir))
+	return GetMD5Hash(fmt.Sprintf("i%sj%dk%sl", challenge_name, level, usr.HomeDir))
 }
 
 func GetMD5Hash(text string) string {
@@ -149,7 +166,7 @@ func (c *Challenge) LoadFromString(text string) {
 	for _, part := range level_regex.FindAllStringSubmatch(text, -1) {
 		c.AddLevel(buildLevel(part[1]))
 	}
-
+	*c.CurrentLevel = LevelToID(c.Levels[0].Name, c.Name)
 }
 
 func BasenameFromPath(path string) string {

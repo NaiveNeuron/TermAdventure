@@ -63,8 +63,12 @@ func main() {
 	challenge.LoadCfg()
 
 	if challenge.CheckCurrentLevel() {
+		challenge.GoToNextLevel()
+	}
+
+	if *challenge.LastLevelPrinted != "yes" {
 		challenge.PrintCurrentLevel(*pretty_print_flag)
-		challenge.IncreaseLevel()
+		challenge.SetConfigVal("last_level_printed", "yes")
 	}
 
 	challenge.PrintIdentifier()

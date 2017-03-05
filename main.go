@@ -9,8 +9,10 @@ import (
 	"os"
 )
 
+var encryption_key string
+
 func main() {
-	key := []byte("example key 1234")
+	key := []byte(encryption_key)
 
 	print_flag := flag.Bool("print", false, "print loaded levels and exit")
 	pretty_print_flag := flag.Bool("no-pretty-print", false,
@@ -61,8 +63,12 @@ func main() {
 	challenge.LoadCfg()
 
 	if challenge.CheckCurrentLevel() {
+		challenge.GoToNextLevel()
+	}
+
+	if *challenge.Printed != "yes" {
 		challenge.PrintCurrentLevel(*pretty_print_flag)
-		challenge.IncreaseLevel()
+		challenge.SetConfigVal("printed", "yes")
 	}
 
 	challenge.PrintIdentifier()

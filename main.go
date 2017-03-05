@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 var encryption_key string
@@ -43,9 +44,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	decrypted_text, err := levels.Decrypt(key, string(challenge_text))
-	if err != nil {
-		log.Fatal(err)
+	decrypted_text := string(challenge_text)
+	if strings.HasSuffix(path, ".enc") {
+		decrypted_text, err = levels.Decrypt(key, string(challenge_text))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	if *decrypt_flag {

@@ -44,11 +44,11 @@ func (level *Level) Print(pretty_print_flag bool) {
 }
 
 type Challenge struct {
-	Name         string
-	Levels       []Level
-	conf         *globalconf.GlobalConf
-	CurrentLevel *string
-	Printed      *string
+	Name             string
+	Levels           []Level
+	conf             *globalconf.GlobalConf
+	CurrentLevel     *string
+	LastLevelPrinted *string
 }
 
 func NewChallenge(name string) Challenge {
@@ -58,10 +58,10 @@ func NewChallenge(name string) Challenge {
 	}
 
 	c := Challenge{
-		Name:         name,
-		conf:         cfg,
-		CurrentLevel: flag.String("level", LevelToID("", name), "Current Level"),
-		Printed:      flag.String("printed", "no", "Printed"),
+		Name:             name,
+		conf:             cfg,
+		CurrentLevel:     flag.String("level", LevelToID("", name), "Current Level"),
+		LastLevelPrinted: flag.String("last_level_printed", "no", "Last Level Printed"),
 	}
 	return c
 }
@@ -110,8 +110,8 @@ func (c *Challenge) GoToNextLevel() {
 	c.SetConfigVal("level", id)
 	*c.CurrentLevel = id
 
-	c.SetConfigVal("printed", "no")
-	*c.Printed = "no"
+	c.SetConfigVal("last_level_printed", "no")
+	*c.LastLevelPrinted = "no"
 }
 
 func (c *Challenge) SetConfigVal(name string, value string) {
@@ -167,7 +167,6 @@ func (c *Challenge) LoadFromString(text string) {
 		c.AddLevel(buildLevel(part[1]))
 	}
 	*c.CurrentLevel = LevelToID(c.Levels[0].Name, c.Name)
-
 }
 
 func BasenameFromPath(path string) string {

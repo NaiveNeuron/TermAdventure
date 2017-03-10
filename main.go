@@ -18,14 +18,17 @@ func main() {
 	print_flag := flag.Bool("print", false, "print loaded levels and exit")
 	pretty_print_flag := flag.Bool("no-pretty-print", false,
 		"disable option to skip pretty printing")
+	detect_level_flag := flag.Bool("detect-level", false,
+		"detect a level from a given hash and home directory")
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
+
 	flag.Parse()
 
 	if len(flag.Args()) < 1 {
 		fmt.Printf("\n\nNo input file\n\n")
-		fmt.Printf("usage: %s path\n\n", os.Args[0])
-		os.Exit(0)
+		fmt.Printf("usage: %s path\n", os.Args[0])
+		os.Exit(1)
 	}
 	path := flag.Args()[0]
 	challenge_name := levels.BasenameFromPath(path)
@@ -58,6 +61,24 @@ func main() {
 	}
 
 	challenge.LoadFromString(decrypted_text)
+
+	if *detect_level_flag {
+		if len(flag.Args()) < 3 {
+			fmt.Printf("usage: %s path hash homedir\n", os.Args[0])
+			os.Exit(1)
+		}
+
+		level := flag.Args()[1]
+		homedir := flag.Args()[2]
+		str, i := challenge.IDAndHomedirToLevel(level, homedir)
+		if i != -1 {
+			fmt.Println("Detected level:", str)
+			os.Exit(0)
+		} else {
+			fmt.Println("Level undetected")
+			os.Exit(1)
+		}
+	}
 
 	if *print_flag {
 		challenge.Print()

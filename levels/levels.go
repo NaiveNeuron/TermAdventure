@@ -140,6 +140,15 @@ func (c *Challenge) LevelNameToIndex(name string) int {
 	return -1
 }
 
+func (c *Challenge) IDAndHomedirToLevel(id string, homedir string) (string, int) {
+	for i := 0; i < len(c.Levels); i++ {
+		if id == LevelAndHomedirToID(c.Levels[i].Name, c.Name, homedir) {
+			return c.Levels[i].Name, i
+		}
+	}
+	return "", -1
+}
+
 func (c *Challenge) IDToLevel(id string) (string, int) {
 	for i := 0; i < len(c.Levels); i++ {
 		if id == LevelToID(c.Levels[i].Name, c.Name) {
@@ -155,6 +164,10 @@ func LevelToID(level string, challenge_name string) string {
 		log.Fatal(err)
 	}
 	return GetMD5Hash(fmt.Sprintf("i%sj%dk%sl", challenge_name, level, usr.HomeDir))
+}
+
+func LevelAndHomedirToID(level string, challenge_name string, homedir string) string {
+	return GetMD5Hash(fmt.Sprintf("i%sj%dk%sl", challenge_name, level, homedir))
 }
 
 func GetMD5Hash(text string) string {

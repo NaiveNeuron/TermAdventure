@@ -62,3 +62,18 @@ whether the `.gta` file is loaded correctly. In order to check file
 `sample.gta` you can run
 
         $ ./go-term-adventure --print sample.gta
+
+The binary uses a hash of many interesting things to keep track of the level
+you are currently in. Depending on the name of the challenge and whether you
+use the attached `challenger.sh`, it can be found in
+
+```
+    $HOME/$CHALLENGE/config.ini
+
+```
+
+Once you have this hash and the home directory of the user which has managed to
+enter the level denoted by this hash, you can reverse-lookup the name of that
+level by executing
+
+        $ ./go-term-adventure --detect-level ./sample.gta $HASH $HOMEDIR

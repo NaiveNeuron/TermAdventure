@@ -18,9 +18,11 @@ func main() {
 	print_flag := flag.Bool("print", false, "print loaded levels and exit")
 	pretty_print_flag := flag.Bool("no-pretty-print", false,
 		"disable option to skip pretty printing")
+	detect_level_flag := flag.Bool("detect-level", false,
+		"detect a level from a given hash and home directory")
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
-	detect_level_flag := flag.Bool("detect-level", false, "detect a level from a given hash")
+
 	flag.Parse()
 
 	if len(flag.Args()) < 1 {

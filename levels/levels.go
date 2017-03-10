@@ -30,12 +30,13 @@ func (f *flagValue) Set(value string) error {
 }
 
 type Level struct {
-	Name         string
-	PreLevelCmd  string `yaml:"precmd"`
-	PostLevelCmd string `yaml:"postcmd"`
-	Text         string
-	TestCmd      string   `yaml:"test"`
-	NextLevels   []string `yaml:"next"`
+	Name              string
+	PreLevelCmd       string `yaml:"precmd"`
+	PostLevelCmd      string `yaml:"postcmd"`
+	PostLevelPrintCmd string `yaml:"postprintcmd"`
+	Text              string
+	TestCmd           string   `yaml:"test"`
+	NextLevels        []string `yaml:"next"`
 }
 
 func (level *Level) Print(pretty_print_flag bool) {
@@ -92,6 +93,7 @@ func (c *Challenge) CheckCurrentLevel() bool {
 func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool) {
 	_, index := c.IDToLevel(*c.CurrentLevel)
 	c.Levels[index].Print(pretty_print_flag)
+	CmdOK(c.Levels[index].PostLevelPrintCmd)
 }
 
 func (c *Challenge) GoToNextLevel() {

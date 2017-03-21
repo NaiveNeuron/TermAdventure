@@ -91,9 +91,16 @@ func main() {
 		challenge.GoToNextLevel()
 	}
 
-	if *challenge.LastLevelPrinted != "yes" {
+	// Print the current level definition either if we have just switched levels,
+	// or if the user has explicitly requested that.
+	print_again_exists, _ := levels.CmdOK("test -e $HOME/.gta_print_again")
+	if *challenge.LastLevelPrinted != "yes" || print_again_exists {
 		challenge.PrintCurrentLevel(*pretty_print_flag)
+
+		// Make sure that the level definition won't be printed again,
+		// unless the user has done any action that suggests it should.
 		challenge.SetConfigVal("last_level_printed", "yes")
+		levels.CmdOK("rm -f $HOME/.gta_print_again")
 	}
 
 	challenge.PrintIdentifier()

@@ -3,7 +3,6 @@
 # save multi-line commands as one command
 shopt -s cmdhist
 
-
 function prompt_command() {
     history -a
     $GTA_BIN $CHALLENGE_FILE
@@ -20,10 +19,10 @@ export HISTFILE=$HOME/.gtahistory
 export HISTCONTROL=ignoredups
 
 # aliases
-alias ls='ls -C --color'
+alias ls='ls -C --color=auto'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-alias l.='ls -d .* --color'
+alias l.='ls -d .* --color=auto'
 
-alias grep='grep --color=always'
+alias grep='grep --color=auto'

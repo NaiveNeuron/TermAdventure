@@ -1,6 +1,6 @@
 #!/bin/bash
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-GTA_BIN=${GTA_BIN=:"$CURRENT_DIR/go-term-adventure.64"}
+GTA_BIN=${GTA_BIN=:"$CURRENT_DIR/go-term-adventure"}
 if [ ! -e $CHALLENGE_FILE ];
 then
     echo "Challenge file $CHALLENGE_FILE does not exist."

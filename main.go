@@ -22,6 +22,8 @@ func main() {
 		"detect a level from a given hash and home directory")
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
+	print_identifier_flag := flag.Bool("print-identifier", false,
+		"print level identifier and exit")
 
 	flag.Parse()
 
@@ -87,6 +89,11 @@ func main() {
 
 	challenge.LoadCfg()
 
+	if *print_identifier_flag {
+		challenge.PrintIdentifier()
+		os.Exit(0)
+	}
+
 	if challenge.CheckCurrentLevel() {
 		challenge.GoToNextLevel()
 	}
@@ -102,6 +109,4 @@ func main() {
 		challenge.SetConfigVal("last_level_printed", "yes")
 		levels.CmdOK("rm -f $HOME/.gta_print_again")
 	}
-
-	challenge.PrintIdentifier()
 }

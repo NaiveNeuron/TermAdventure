@@ -3,8 +3,15 @@
 # save multi-line commands as one command
 shopt -s cmdhist
 
-# set PS1 to a sane default
+
+function prompt_command() {
+    history -a
+    $GTA_BIN $CHALLENGE_FILE
+    export PS1='$($GTA_BIN --print-identifier $CHALLENGE_FILE)[\u@\H:\w]$ '
+}
+export PROMPT_COMMAND=prompt_command
 export PS1="[\u@\H:\w]$ "
+force_color_prompt=yes
 
 # history
 export HISTFILESIZE=500
@@ -13,10 +20,10 @@ export HISTFILE=$HOME/.gtahistory
 export HISTCONTROL=ignoredups
 
 # aliases
-alias ls='ls --color=auto'
+alias ls='ls -C --color'
 alias ll='ls -l'
 alias la='ls -A'
 alias l='ls -CF'
-alias l.='ls -d .* --color=auto'
+alias l.='ls -d .* --color'
 
-alias grep='grep --color=auto'
+alias grep='grep --color=always'

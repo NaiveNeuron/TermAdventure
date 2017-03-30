@@ -31,26 +31,34 @@ func main() {
 
 	if len(flag.Args()) < 1 {
 		fmt.Printf("\n\nNo input file\n\n")
-		fmt.Printf("usage: %s path\n", os.Args[0])
+		if *template_flag {
+			fmt.Printf("usage: %s <path to template file> (optional: <path to variable file>)\n", os.Args[0])
+		} else {
+			fmt.Printf("usage: %s <path to .gta file>\n", os.Args[0])
+		}
 		os.Exit(1)
 	}
 
 	if *template_flag {
 		templ, err := ioutil.ReadFile(flag.Args()[0])
 		if err != nil {
-			panic(err)
+			fmt.Fprintf(os.Stderr, "%s\n\n", err)
+			fmt.Printf("usage: %s <path to template file> (optional: <path to variable file>)\n", os.Args[0])
+			os.Exit(1)
 		}
-		var yamlName string
+		var yaml_name string
 		if len(flag.Args()) >= 2 {
-			yamlName = flag.Args()[1]
+			yaml_name = flag.Args()[1]
 		} else {
-			yamlName = levels.BasenameFromPath(flag.Args()[0]) + ".yaml"
+			yaml_name = levels.BasenameFromPath(flag.Args()[0]) + ".yaml"
 		}
-		yamlData, yaml_err := ioutil.ReadFile(yamlName)
+		yaml_data, yaml_err := ioutil.ReadFile(yaml_name)
 		if yaml_err != nil {
-			panic(yaml_err)
+			fmt.Fprintf(os.Stderr, "%s\n", yaml_err)
+			fmt.Printf("usage: %s <path to template file> (optional: <path to variable file>)\n", os.Args[0])
+			os.Exit(1)
 		}
-		levels.Template(templ, yamlData)
+		levels.Template(templ, yaml_data)
 		os.Exit(0)
 	}
 	path := flag.Args()[0]

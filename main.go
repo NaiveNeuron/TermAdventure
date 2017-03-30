@@ -24,6 +24,8 @@ func main() {
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
 	template_flag := flag.Bool("temp", false,
 		"generate content of a .gta file from given template file and variables file")
+	print_identifier_flag := flag.Bool("print-identifier", false,
+		"print level identifier and exit")
 
 	flag.Parse()
 
@@ -108,14 +110,24 @@ func main() {
 
 	challenge.LoadCfg()
 
+	if *print_identifier_flag {
+		challenge.PrintIdentifier()
+		os.Exit(0)
+	}
+
 	if challenge.CheckCurrentLevel() {
 		challenge.GoToNextLevel()
 	}
 
-	if *challenge.LastLevelPrinted != "yes" {
+	// Print the current level definition either if we have just switched levels,
+	// or if the user has explicitly requested that.
+	print_again_exists, _ := levels.CmdOK("test -e $HOME/.gta_print_again")
+	if *challenge.LastLevelPrinted != "yes" || print_again_exists {
 		challenge.PrintCurrentLevel(*pretty_print_flag)
-		challenge.SetConfigVal("last_level_printed", "yes")
-	}
 
-	challenge.PrintIdentifier()
+		// Make sure that the level definition won't be printed again,
+		// unless the user has done any action that suggests it should.
+		challenge.SetConfigVal("last_level_printed", "yes")
+		levels.CmdOK("rm -f $HOME/.gta_print_again")
+	}
 }

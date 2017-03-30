@@ -22,6 +22,8 @@ func main() {
 		"detect a level from a given hash and home directory")
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
+	template_flag := flag.Bool("temp", false,
+		"generate content of a .gta file from given template file and variables file")
 	print_identifier_flag := flag.Bool("print-identifier", false,
 		"print level identifier and exit")
 
@@ -29,8 +31,38 @@ func main() {
 
 	if len(flag.Args()) < 1 {
 		fmt.Printf("\n\nNo input file\n\n")
-		fmt.Printf("usage: %s path\n", os.Args[0])
+		if *template_flag {
+			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
+				"variables_file=template_name.yaml by default\n", os.Args[0])
+		} else {
+			fmt.Printf("usage: %s gta_file>\n", os.Args[0])
+		}
 		os.Exit(1)
+	}
+
+	if *template_flag {
+		templ, err := ioutil.ReadFile(flag.Args()[0])
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%s\n\n", err)
+			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
+				"variables_file=template_name.yaml by default\n", os.Args[0])
+			os.Exit(1)
+		}
+		var yaml_name string
+		if len(flag.Args()) >= 2 {
+			yaml_name = flag.Args()[1]
+		} else {
+			yaml_name = levels.BasenameFromPath(flag.Args()[0]) + ".yaml"
+		}
+		yaml_data, yaml_err := ioutil.ReadFile(yaml_name)
+		if yaml_err != nil {
+			fmt.Fprintf(os.Stderr, "%s\n", yaml_err)
+			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
+				"variables_file=template_name.yaml by default\n", os.Args[0])
+			os.Exit(1)
+		}
+		levels.Template(templ, yaml_data)
+		os.Exit(0)
 	}
 	path := flag.Args()[0]
 	challenge_name := levels.BasenameFromPath(path)

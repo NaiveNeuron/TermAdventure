@@ -32,9 +32,10 @@ func main() {
 	if len(flag.Args()) < 1 {
 		fmt.Printf("\n\nNo input file\n\n")
 		if *template_flag {
-			fmt.Printf("usage: %s <path to template file> (optional: <path to variable file>)\n", os.Args[0])
+			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
+				"variables_file=template_name.yaml by default\n", os.Args[0])
 		} else {
-			fmt.Printf("usage: %s <path to .gta file>\n", os.Args[0])
+			fmt.Printf("usage: %s gta_file>\n", os.Args[0])
 		}
 		os.Exit(1)
 	}
@@ -43,7 +44,8 @@ func main() {
 		templ, err := ioutil.ReadFile(flag.Args()[0])
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%s\n\n", err)
-			fmt.Printf("usage: %s <path to template file> (optional: <path to variable file>)\n", os.Args[0])
+			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
+				"variables_file=template_name.yaml by default\n", os.Args[0])
 			os.Exit(1)
 		}
 		var yaml_name string
@@ -55,7 +57,8 @@ func main() {
 		yaml_data, yaml_err := ioutil.ReadFile(yaml_name)
 		if yaml_err != nil {
 			fmt.Fprintf(os.Stderr, "%s\n", yaml_err)
-			fmt.Printf("usage: %s <path to template file> (optional: <path to variable file>)\n", os.Args[0])
+			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
+				"variables_file=template_name.yaml by default\n", os.Args[0])
 			os.Exit(1)
 		}
 		levels.Template(templ, yaml_data)

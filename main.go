@@ -22,6 +22,8 @@ func main() {
 		"detect a level from a given hash and home directory")
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
+	template_flag := flag.Bool("temp", false,
+		"generate content of a .gta file from given template file and variables file")
 
 	flag.Parse()
 
@@ -29,6 +31,25 @@ func main() {
 		fmt.Printf("\n\nNo input file\n\n")
 		fmt.Printf("usage: %s path\n", os.Args[0])
 		os.Exit(1)
+	}
+
+	if *template_flag {
+		templ, err := ioutil.ReadFile(flag.Args()[0])
+		if err != nil {
+			panic(err)
+		}
+		var yamlName string
+		if len(flag.Args()) >= 2 {
+			yamlName = flag.Args()[1]
+		} else {
+			yamlName = levels.BasenameFromPath(flag.Args()[0]) + ".yaml"
+		}
+		yamlData, yaml_err := ioutil.ReadFile(yamlName)
+		if yaml_err != nil {
+			panic(yaml_err)
+		}
+		levels.Template(templ, yamlData)
+		os.Exit(0)
 	}
 	path := flag.Args()[0]
 	challenge_name := levels.BasenameFromPath(path)

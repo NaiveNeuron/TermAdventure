@@ -1,6 +1,6 @@
 name: l00
 test: test $(pwd) = "/tmp"
-next: [l01-1, l01-2]
+next: [{{ generate_levels "l01-" .names "%s%d" }}]
 
 # First alternative bash excercise
 
@@ -21,14 +21,14 @@ Got it?
 I am pretty sure you do. Now use this cd command and go to the /tmp directory
 
 --------------------
-
-name: l01-1
+{{range $index, $name := .names}}
+name: l01-{{add $index 1}}
 precmd: echo "Hi there!" > /tmp/gtatest
 postcmd: rm /tmp/gtatest
 test: test $(pwd) = "$HOME"
 next: [l02]
 
-I see you made it to level01, awesome !
+I see you made it to {{$name}}, awesome !
 
 Now try to get back to your home directory. This is the directory you are in
 when you log into your account or open a new shell. It is pretty tough to
@@ -39,25 +39,7 @@ will end up in your home directory, wherever that might be.
 (Note: you might want to check /tmp/gtatest)
 
 --------------------
-
-name: l01-2
-precmd: echo "Hi there!" > /tmp/gtatest
-postcmd: rm /tmp/gtatest
-test: test $(pwd) = "$HOME"
-next: [l02]
-
-I see you made it to level02, awesome !
-
-Now try to get back to your home directory. This is the directory you are in
-when you log into your account or open a new shell. It is pretty tough to
-remember its particular name so the old UNIX hackers have simplified it for
-you: if you execute the "cd" command without any additional parameters, you
-will end up in your home directory, wherever that might be.
-
-(Note: you might want to check /tmp/gtatest)
-
---------------------
-
+{{end}}
 name: l02
 test: false
 

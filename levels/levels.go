@@ -39,9 +39,9 @@ type Level struct {
 	NextLevels        []string `yaml:"next"`
 }
 
-func (level *Level) Print(pretty_print_flag bool) {
+func (level *Level) Print(pretty_print_flag bool, print_sleep_time int) {
 	terminalized_text := MarkdownToTerminal(level.Text)
-	PrintText(terminalized_text, pretty_print_flag)
+	PrintText(terminalized_text, pretty_print_flag, print_sleep_time)
 }
 
 type Challenge struct {
@@ -90,9 +90,9 @@ func (c *Challenge) CheckCurrentLevel() bool {
 	}
 }
 
-func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool) {
+func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool, print_sleep_time int) {
 	_, index := c.IDToLevel(*c.CurrentLevel)
-	c.Levels[index].Print(pretty_print_flag)
+	c.Levels[index].Print(pretty_print_flag, print_sleep_time)
 	CmdOK(c.Levels[index].PostLevelPrintCmd)
 }
 

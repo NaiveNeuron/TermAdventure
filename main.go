@@ -26,6 +26,10 @@ func main() {
 		"generate content of a .gta file from given template file and variables file")
 	print_identifier_flag := flag.Bool("print-identifier", false,
 		"print level identifier and exit")
+	print_sleep_time := flag.Int("print-sleep-time", 50,
+		"sets the amount of milliseconds that need to occur between two chars being printed")
+	print_current_level_flag := flag.Bool("print-current-level", false,
+		"print current level and exit")
 
 	flag.Parse()
 
@@ -121,6 +125,11 @@ func main() {
 
 	challenge.LoadCfg()
 
+	if *print_current_level_flag {
+		challenge.PrintCurrentLevel(*pretty_print_flag, *print_sleep_time)
+		os.Exit(0)
+	}
+
 	if *print_identifier_flag {
 		challenge.PrintIdentifier()
 		os.Exit(0)
@@ -134,7 +143,7 @@ func main() {
 	// or if the user has explicitly requested that.
 	print_again_exists, _ := levels.CmdOK("test -e $HOME/.gta_print_again")
 	if *challenge.LastLevelPrinted != "yes" || print_again_exists {
-		challenge.PrintCurrentLevel(*pretty_print_flag)
+		challenge.PrintCurrentLevel(*pretty_print_flag, *print_sleep_time)
 
 		// Make sure that the level definition won't be printed again,
 		// unless the user has done any action that suggests it should.

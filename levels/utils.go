@@ -28,7 +28,7 @@ func CmdOK(cmd string) (bool, string) {
 
 var key_pressed = false
 
-func print_line(text string, keypress chan []byte, echo_state bool) {
+func print_line(text string, keypress chan []byte, echo_state bool, print_sleep_time int) {
 	var counter = 0
 	var b []byte = make([]byte, 1)
 	for _, char := range text {
@@ -48,15 +48,15 @@ func print_line(text string, keypress chan []byte, echo_state bool) {
 				fmt.Print("")
 			}
 		}
-		time.Sleep(50 * time.Millisecond)
+		time.Sleep(time.Duration(print_sleep_time) * time.Millisecond)
 		if char == '.' || char == '!' || char == '?' {
-			time.Sleep(500 * time.Millisecond)
+			time.Sleep(time.Duration(print_sleep_time) * 10 * time.Millisecond)
 		}
 	}
 	fmt.Println()
 }
 
-func PrintText(text string, pretty_print bool) {
+func PrintText(text string, pretty_print bool, print_sleep_time int) {
 	var echo_state bool = true
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
@@ -81,10 +81,10 @@ func PrintText(text string, pretty_print bool) {
 	}
 
 	keypress := make(chan []byte, 1)
-	PrettyPrintText(text, keypress, echo_state)
+	PrettyPrintText(text, keypress, echo_state, print_sleep_time)
 }
 
-func PrettyPrintText(text string, keypress chan []byte, echo_state bool) {
+func PrettyPrintText(text string, keypress chan []byte, echo_state bool, print_sleep_time int) {
 	lines := strings.Split(text, "\n")
 	var counter = 0
 	for _, line := range lines {
@@ -92,7 +92,7 @@ func PrettyPrintText(text string, keypress chan []byte, echo_state bool) {
 		if counter > len(text) {
 			counter = len(text)
 		}
-		print_line(line, keypress, echo_state)
+		print_line(line, keypress, echo_state, print_sleep_time)
 		if key_pressed {
 			fmt.Println(text[counter:len(text)])
 			break

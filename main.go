@@ -22,7 +22,9 @@ func main() {
 		"detect a level from a given hash and home directory")
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
-	template_flag := flag.Bool("temp", false,
+	template_flag := flag.Bool("generate-from-template", false,
+		"generate content of a .gta file from given template file and variables file")
+	flag.BoolVar(template_flag, "g", false,
 		"generate content of a .gta file from given template file and variables file")
 	print_identifier_flag := flag.Bool("print-identifier", false,
 		"print level identifier and exit")

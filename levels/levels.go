@@ -44,6 +44,11 @@ func (level *Level) Print(pretty_print_flag bool, print_sleep_time int) {
 	PrintText(terminalized_text, pretty_print_flag, print_sleep_time)
 }
 
+func (level *Level) PrintText() {
+	terminalized_text := MarkdownToTerminal(level.Text)
+	fmt.Println(terminalized_text)
+}
+
 type Challenge struct {
 	Name             string
 	Levels           []Level
@@ -94,6 +99,11 @@ func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool, print_sleep_time i
 	_, index := c.IDToLevel(*c.CurrentLevel)
 	c.Levels[index].Print(pretty_print_flag, print_sleep_time)
 	CmdOK(c.Levels[index].PostLevelPrintCmd)
+}
+
+func (c *Challenge) PrintCurrentLevelText() {
+	_, index := c.IDToLevel(*c.CurrentLevel)
+	c.Levels[index].PrintText()
 }
 
 func (c *Challenge) GoToNextLevel() {

@@ -128,7 +128,7 @@ func main() {
 	challenge.LoadCfg()
 
 	if *print_current_level_flag {
-		challenge.PrintCurrentLevel(*pretty_print_flag, *print_sleep_time)
+		challenge.PrintCurrentLevelText()
 		os.Exit(0)
 	}
 

@@ -32,6 +32,8 @@ func main() {
 		"sets the amount of milliseconds that need to occur between two chars being printed")
 	print_current_level_flag := flag.Bool("print-current-level", false,
 		"print current level and exit")
+	check_current_level_flag := flag.Bool("check-current-level", false,
+		"check whether current level is to be passed (sets correct exit code)")
 
 	flag.Parse()
 
@@ -135,6 +137,14 @@ func main() {
 	if *print_identifier_flag {
 		challenge.PrintIdentifier()
 		os.Exit(0)
+	}
+
+	if *check_current_level_flag {
+		if challenge.CheckCurrentLevel() {
+			os.Exit(0)
+		} else {
+			os.Exit(1)
+		}
 	}
 
 	if challenge.CheckCurrentLevel() {

@@ -141,6 +141,15 @@ func (c *Challenge) PrintIdentifier() {
 	fmt.Printf("[%s %s]", c.Name, level)
 }
 
+func (c *Challenge) PrintLevel() {
+	level, _ := c.IDToLevel(*c.CurrentLevel)
+	fmt.Printf("%s", level)
+}
+
+func (c *Challenge) PrintChallengeName() {
+	fmt.Printf("%s", c.Name)
+}
+
 func (c *Challenge) LevelNameToIndex(name string) int {
 	for i := 0; i < len(c.Levels); i++ {
 		if name == c.Levels[i].Name {

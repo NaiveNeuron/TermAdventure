@@ -27,7 +27,11 @@ func main() {
 	flag.BoolVar(template_flag, "g", false,
 		"generate content of a .gta file from given template file and variables file")
 	print_identifier_flag := flag.Bool("print-identifier", false,
-		"print level identifier and exit")
+		"print level identifier (part of PS1) and exit")
+	print_level_flag := flag.Bool("print-level", false,
+		"print just the level identifier and exit")
+	print_challenge_flag := flag.Bool("print-challenge", false,
+		"print just the name of challenge and exit")
 	print_sleep_time := flag.Int("print-sleep-time", 50,
 		"sets the amount of milliseconds that need to occur between two chars being printed")
 	print_current_level_flag := flag.Bool("print-current-level", false,
@@ -134,6 +138,16 @@ func main() {
 
 	if *print_identifier_flag {
 		challenge.PrintIdentifier()
+		os.Exit(0)
+	}
+
+	if *print_level_flag {
+		challenge.PrintLevel()
+		os.Exit(0)
+	}
+
+	if *print_challenge_flag {
+		challenge.PrintChallengeName()
 		os.Exit(0)
 	}
 

@@ -131,6 +131,8 @@ func main() {
 		os.Exit(0)
 	}
 
+	challenge.SanityCheck()
+
 	challenge.LoadCfg()
 
 	if *print_current_level_flag {

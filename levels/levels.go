@@ -9,6 +9,7 @@ import (
 	"gopkg.in/yaml.v2"
 	"log"
 	"math/rand"
+	"os"
 	"os/user"
 	"path/filepath"
 	"regexp"
@@ -78,6 +79,20 @@ func (c *Challenge) SetCurrentLevel(level string) {
 
 func (c *Challenge) AddLevel(level Level) {
 	c.Levels = append(c.Levels, level)
+}
+
+// Check whether every level is sane (i.e. it has a non-empty level name).
+func (c *Challenge) SanityCheck() {
+	last_working_level := "<None> (The first level is likely broken)"
+	for _, level := range c.Levels {
+		if level.Name != "" {
+			last_working_level = level.Name
+		} else {
+			fmt.Printf("[error] Something is wrong -- a level with an empty name has been found.\n")
+			fmt.Printf("[error] The last correct level was '%s'.\n", last_working_level)
+			os.Exit(1)
+		}
+	}
 }
 
 func (c *Challenge) CheckCurrentLevel() bool {

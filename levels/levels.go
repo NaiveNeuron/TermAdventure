@@ -38,6 +38,7 @@ type Level struct {
 	Text              string
 	TestCmd           string   `yaml:"test"`
 	NextLevels        []string `yaml:"next"`
+	BackgroundJobs    bool     `yaml:"bgjobs"`
 }
 
 func (level *Level) Print(pretty_print_flag bool, print_sleep_time int) {
@@ -114,6 +115,11 @@ func (c *Challenge) PrintCurrentLevel(pretty_print_flag bool, print_sleep_time i
 	_, index := c.IDToLevel(*c.CurrentLevel)
 	c.Levels[index].Print(pretty_print_flag, print_sleep_time)
 	CmdOK(c.Levels[index].PostLevelPrintCmd)
+}
+
+func (c *Challenge) UsesBackgroundJobs() bool {
+	_, index := c.IDToLevel(*c.CurrentLevel)
+	return c.Levels[index].BackgroundJobs
 }
 
 func (c *Challenge) PrintCurrentLevelText() {

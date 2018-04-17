@@ -38,6 +38,8 @@ func main() {
 		"print current level and exit")
 	check_current_level_flag := flag.Bool("check-current-level", false,
 		"check whether current level is to be passed (sets correct exit code)")
+	background_jobs_flag := flag.Bool("background-jobs", false,
+		"returns correct exit code based on whether the current level uses background jobs")
 
 	flag.Parse()
 
@@ -156,6 +158,14 @@ func main() {
 	}
 	if *check_current_level_flag {
 		if challenge.CheckCurrentLevel() {
+			os.Exit(0)
+		} else {
+			os.Exit(1)
+		}
+	}
+
+	if *background_jobs_flag {
+		if challenge.UsesBackgroundJobs() {
 			os.Exit(0)
 		} else {
 			os.Exit(1)

@@ -29,20 +29,20 @@ func CmdOK(cmd string) (bool, string) {
 var key_pressed = false
 
 func print_line(text string, keypress chan []byte, echo_state bool, print_sleep_time int) {
-	var counter = 0
 	var b []byte = make([]byte, 1)
 	for _, char := range text {
 		fmt.Printf("%s", string(char))
 		if echo_state == false {
-			counter++
 			go func() { os.Stdin.Read(b); keypress <- b }()
 			select {
 			case key := <-keypress:
 				// only skip if enter or space was pressed
 				if key[0] == 10 || key[0] == 32 {
 					key_pressed = true
-					fmt.Println(text[counter:len(text)])
-					return
+					// once we are certain skipping should take place,
+					// let us do so by not waiting between printing
+					// respective characters
+					print_sleep_time = 0
 				}
 			default:
 				fmt.Print("")
@@ -86,16 +86,12 @@ func PrintText(text string, pretty_print bool, print_sleep_time int) {
 
 func PrettyPrintText(text string, keypress chan []byte, echo_state bool, print_sleep_time int) {
 	lines := strings.Split(text, "\n")
-	var counter = 0
 	for _, line := range lines {
-		counter += len(line) + 1
-		if counter > len(text) {
-			counter = len(text)
-		}
 		print_line(line, keypress, echo_state, print_sleep_time)
+		// once the correct key has been pressed (in print_line above)
+		// finish the printing operation by not waiting before outputing characters
 		if key_pressed {
-			fmt.Println(text[counter:len(text)])
-			break
+			print_sleep_time = 0
 		}
 	}
 }

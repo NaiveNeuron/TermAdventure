@@ -18,11 +18,13 @@ import (
 	"time"
 )
 
+var DefaultShell = "/bin/bash"
+
 func CmdOK(cmd string) (bool, string) {
 	if cmd == "" {
 		return true, ""
 	}
-	output, err := exec.Command("sh", "-c", cmd).Output()
+	output, err := exec.Command(DefaultShell, "-c", cmd).Output()
 	return err == nil, string(output)
 }
 

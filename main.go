@@ -187,4 +187,12 @@ func main() {
 		challenge.SetConfigVal("last_level_printed", "yes")
 		levels.CmdOK("rm -f $HOME/.gta_print_again")
 	}
+
+	level_restart, _ := levels.CmdOK("test -e $HOME/.gta_level_restart")
+	if level_restart {
+		_, index := challenge.IDToLevel(*challenge.CurrentLevel)
+		current_level := challenge.Levels[index]
+		levels.CmdOK(current_level.PreLevelCmd)
+		levels.CmdOK("rm -f $HOME/.gta_level_restart")
+	}
 }

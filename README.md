@@ -1,4 +1,4 @@
-# go-term-adventure
+# term-adventure
 
 A go library for creating good old text adventures in and for the *nix terminals
 
@@ -10,14 +10,14 @@ this repository, install the Go language binary and run
 in this repository.
 
 The respective levels (or stages) of your challenges (shell sessions the
-runners start) are described in `.gta` files. Levels are separated by Markdown
+runners start) are described in `.ta` files. Levels are separated by Markdown
 horizontal lines with at least 10 dashes.
 
 In order for a level to be recognized, it needs to have two parts: `metadata``
 and `text`. As expected, the `text` is just Markdown formatted text that gets
 printed in terminal and should guide the user. The `metadata` consist of a YAML
 document that specifies metadata for a given level. The `metadata` are
-separated from `text` by two new lines. An example challenge (.gta) file might
+separated from `text` by two new lines. An example challenge (.ta) file might
 therefore look as follows:
 
 ```
@@ -57,11 +57,11 @@ printed and the user can proceed to `level1`. In order to solve that level the
 `test` command needs to pass (return exit status code `0`). Once it does, the
 same procedure takes place.
 
-The generated binary (`go-term-adventure`) also provides an option to check,
-whether the `.gta` file is loaded correctly. In order to check file
-`sample.gta` you can run
+The generated binary (`term-adventure`) also provides an option to check,
+whether the `.ta` file is loaded correctly. In order to check file
+`sample.ta` you can run
 
-        $ ./go-term-adventure --print sample.gta
+        $ ./term-adventure --print sample.ta
 
 The binary uses a hash of many interesting things to keep track of the level
 you are currently in. Depending on the name of the challenge and whether you
@@ -76,4 +76,4 @@ Once you have this hash and the home directory of the user which has managed to
 enter the level denoted by this hash, you can reverse-lookup the name of that
 level by executing
 
-        $ ./go-term-adventure --detect-level ./sample.gta $HASH $HOMEDIR
+        $ ./term-adventure --detect-level ./sample.ta $HASH $HOMEDIR

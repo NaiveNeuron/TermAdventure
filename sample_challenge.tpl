@@ -23,8 +23,8 @@ I am pretty sure you do. Now use this cd command and go to the /tmp directory
 --------------------
 {{range $index, $name := .names}}
 name: l01-{{add $index 1}}
-precmd: echo "Hi there!" > /tmp/gtatest
-postcmd: rm /tmp/gtatest
+precmd: echo "Hi there!" > /tmp/ta_test
+postcmd: rm /tmp/ta_test
 test: test $(pwd) = "$HOME"
 next: [l02]
 
@@ -36,7 +36,7 @@ remember its particular name so the old UNIX hackers have simplified it for
 you: if you execute the "cd" command without any additional parameters, you
 will end up in your home directory, wherever that might be.
 
-(Note: you might want to check /tmp/gtatest)
+(Note: you might want to check /tmp/ta_test)
 
 --------------------
 {{end}}

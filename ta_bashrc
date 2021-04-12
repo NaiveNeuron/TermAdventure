@@ -5,8 +5,8 @@ shopt -s cmdhist
 
 function prompt_command() {
     history -a
-    $GTA_BIN $CHALLENGE_FILE
-    export PS1='$($GTA_BIN --print-identifier $CHALLENGE_FILE)[\u@\H:\w]$ '
+    $TA_BIN $CHALLENGE_FILE
+    export PS1='$($TA_BIN --print-identifier $CHALLENGE_FILE)[\u@\H:\w]$ '
 }
 export PROMPT_COMMAND=prompt_command
 export PS1="[\u@\H:\w]$ "
@@ -15,7 +15,7 @@ force_color_prompt=yes
 # history
 export HISTFILESIZE=500
 export HISTSIZE=500
-export HISTFILE=$HOME/.gtahistory
+export HISTFILE=$HOME/.tahistory
 export HISTCONTROL=ignoredups
 
 # aliases

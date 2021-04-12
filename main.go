@@ -23,9 +23,9 @@ func main() {
 	encrypt_flag := flag.Bool("enc", false, "encrypt a given challenge")
 	decrypt_flag := flag.Bool("dec", false, "decrypt a given challenge")
 	template_flag := flag.Bool("generate-from-template", false,
-		"generate content of a .gta file from given template file and variables file")
+		"generate content of a .ta file from given template file and variables file")
 	flag.BoolVar(template_flag, "g", false,
-		"generate content of a .gta file from given template file and variables file")
+		"generate content of a .ta file from given template file and variables file")
 	print_identifier_flag := flag.Bool("print-identifier", false,
 		"print level identifier (part of PS1) and exit")
 	print_level_flag := flag.Bool("print-level", false,
@@ -49,7 +49,7 @@ func main() {
 			fmt.Printf("usage: %s template_file [variables_file]\n\n"+
 				"variables_file=template_name.yaml by default\n", os.Args[0])
 		} else {
-			fmt.Printf("usage: %s gta_file>\n", os.Args[0])
+			fmt.Printf("usage: %s ta_file>\n", os.Args[0])
 		}
 		os.Exit(1)
 	}
@@ -178,21 +178,21 @@ func main() {
 
 	// Print the current level definition either if we have just switched levels,
 	// or if the user has explicitly requested that.
-	print_again_exists, _ := levels.CmdOK("test -e $HOME/.gta_print_again")
+	print_again_exists, _ := levels.CmdOK("test -e $HOME/.ta_print_again")
 	if *challenge.LastLevelPrinted != "yes" || print_again_exists {
 		challenge.PrintCurrentLevel(*pretty_print_flag, *print_sleep_time)
 
 		// Make sure that the level definition won't be printed again,
 		// unless the user has done any action that suggests it should.
 		challenge.SetConfigVal("last_level_printed", "yes")
-		levels.CmdOK("rm -f $HOME/.gta_print_again")
+		levels.CmdOK("rm -f $HOME/.ta_print_again")
 	}
 
-	level_restart, _ := levels.CmdOK("test -e $HOME/.gta_level_restart")
+	level_restart, _ := levels.CmdOK("test -e $HOME/.ta_level_restart")
 	if level_restart {
 		_, index := challenge.IDToLevel(*challenge.CurrentLevel)
 		current_level := challenge.Levels[index]
 		levels.CmdOK(current_level.PreLevelCmd)
-		levels.CmdOK("rm -f $HOME/.gta_level_restart")
+		levels.CmdOK("rm -f $HOME/.ta_level_restart")
 	}
 }

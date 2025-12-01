@@ -3,7 +3,7 @@ package levels
 import (
 	"fmt"
 	"gopkg.in/yaml.v2"
-	"html/template"
+	"text/template"
 	"os"
 	"reflect"
 	"strings"
